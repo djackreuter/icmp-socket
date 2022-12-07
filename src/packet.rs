@@ -823,6 +823,27 @@ impl Icmpv4Packet {
     }
 }
 
+impl WithEchoReply for Icmpv4Packet {
+    type Packet = Icmpv4Packet;
+
+    fn with_echo_reply(
+        identifier: u16,
+        sequence: u16,
+        payload: Vec<u8>,
+    ) -> Result<Self, IcmpPacketBuildError> {
+        Ok(Self {
+            typ: 0,
+            code: 0,
+            checksum: 0,
+            message: Icmpv4Message::EchoReply {
+                identifier: identifier,
+                sequence: sequence,
+                payload: payload,
+            },
+        })
+    }
+}
+
 impl TryFrom<&[u8]> for Icmpv4Packet {
     type Error = PacketParseError;
     fn try_from(b: &[u8]) -> Result<Self, Self::Error> {
